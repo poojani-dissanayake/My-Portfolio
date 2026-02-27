@@ -1,0 +1,152 @@
+.hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+  padding: 120px 8% 80px;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-hero);
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text);
+  letter-spacing: -0.03em;
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.typingWrapper {
+  min-height: 32px;
+  margin-top: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.typing {
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.cursor {
+  color: var(--text-light);
+  font-weight: 300;
+  animation: blinkCursor 0.8s step-end infinite;
+}
+
+@keyframes blinkCursor {
+  50% { opacity: 0; }
+}
+
+.desc {
+  margin-top: 24px;
+  max-width: 600px;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+
+.btns {
+  display: flex;
+  gap: 16px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.btnPrimary,
+.btnOutline {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btnPrimary {
+  background: var(--accent-gradient);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(134, 93, 54, 0.22);
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(134, 93, 54, 0.28);
+}
+
+.btnOutline {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text);
+}
+
+.btnOutline:hover {
+  background: var(--accent-light);
+  border-color: var(--accent2);
+  color: var(--accent-strong);
+}
+
+.socials {
+  display: flex;
+  gap: 16px;
+  margin-top: 48px;
+  position: relative;
+  z-index: 1;
+}
+
+.socials a {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  width: 40px; height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.socials a:hover {
+  color: var(--accent-strong);
+  background: var(--accent-light);
+}
+
+.scrollIndicator {
+  position: absolute;
+  bottom: 40px;
+  font-size: 1.2rem;
+  color: var(--text-light);
+  cursor: pointer;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2.5rem; }
+  .hero { padding: 100px 5% 60px; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 2rem; }
+  .btns { flex-direction: column; align-items: stretch; width: 100%; max-width: 300px; }
+}

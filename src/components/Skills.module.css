@@ -1,0 +1,89 @@
+.section {
+  padding: 100px 8% 80px;
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin-bottom: 60px;
+  font-size: 1.1rem;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+}
+
+.barsCol { display: flex; flex-direction: column; gap: 24px; }
+
+.bar { margin-bottom: 0; }
+
+.barInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.track {
+  height: 6px;
+  background: var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: var(--accent-gradient);
+  border-radius: 6px;
+}
+
+.tagsCol h3 {
+  margin-bottom: 24px;
+  font-size: 1.25rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tag {
+  background: var(--bg-secondary);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid var(--border-color);
+  cursor: default;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  background: var(--accent-light);
+  color: var(--accent-strong);
+  border-color: var(--accent2);
+  box-shadow: var(--card-shadow);
+}
+
+@media (max-width: 768px) {
+  .container { grid-template-columns: 1fr; gap: 40px; }
+  .section { padding: 80px 5% 60px; }
+}

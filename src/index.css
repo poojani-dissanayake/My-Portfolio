@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ===== CSS VARIABLES — MINIMAL SAAS THEME (2026) ===== */
+:root {
+  --bg-primary: #fcf9f6;
+  --bg-secondary: #f5eee7;
+  --bg-gradient: linear-gradient(180deg, #fcf9f6 0%, #f5eee7 100%);
+  --bg-hero: radial-gradient(circle at top center, rgba(172, 137, 104, 0.18) 0%, #fcf9f6 62%);
+  
+  /* Soft Lavender / Blue Accents */
+  --accent-strong: #3E362E;
+  --accent: #865D36;
+  --accent-muted: #93785B;
+  --accent2: #AC8968;
+  --accent-soft: #A69080;
+  --accent-gradient: linear-gradient(135deg, #865D36, #AC8968);
+  --accent-light: rgba(172, 137, 104, 0.14);
+  
+  /* Typography */
+  --text: #3E362E;
+  --text-muted: #93785B;
+  --text-light: #A69080;
+  
+  /* Borders & Shadows */
+  --border-color: rgba(147, 120, 91, 0.2);
+  --card-bg: #fffdfa;
+  --card-shadow: 0 4px 24px rgba(62, 54, 46, 0.06);
+  --card-hover-shadow: 0 12px 32px rgba(62, 54, 46, 0.1);
+  
+  /* Glass */
+  --header-bg: rgba(252, 249, 246, 0.82);
+}
+
+/* ===== RESET ===== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text);
+  overflow-x: hidden;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+::selection {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+::-webkit-scrollbar { width: 6px }
+::-webkit-scrollbar-track { background: transparent }
+::-webkit-scrollbar-thumb { background: rgba(166, 144, 128, 0.6); border-radius: 10px }
+::-webkit-scrollbar-thumb:hover { background: #AC8968 }
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+@media (max-width: 768px) {
+  .section-wrapper {
+    padding: 80px 5% 60px;
+  }
+}
+

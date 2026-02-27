@@ -1,0 +1,38 @@
+.footer {
+  text-align: center;
+  padding: 40px 8%;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
+  color: var(--text);
+}
+
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.socials a {
+  width: 40px; height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text);
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+}
+
+.socials a:hover {
+  color: #fff;
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+
+.footer p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
