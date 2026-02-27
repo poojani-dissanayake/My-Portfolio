@@ -47,7 +47,7 @@ export default function Header() {
       transition={{ duration: 0.6, ease: 'easeOut' }}
     >
       <a href="#hero" className={styles.logo} onClick={(e) => handleNav(e, '#hero')}>
-        Poojani D.
+        Poojani Dissanayake.
       </a>
 
       {/* Desktop Nav */}
