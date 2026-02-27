@@ -1,0 +1,2382 @@
+```App.tsx
+import React, { useEffect, useState, Component } from 'react'
+import { ArrowUp } from 'lucide-react'
+// Components
+import { Loader } from './components/Loader'
+import { Navbar } from './components/Navbar'
+import { HeroSection } from './components/HeroSection'
+import { AboutSection } from './components/AboutSection'
+import { SkillsSection } from './components/SkillsSection'
+import { ProjectsSection } from './components/ProjectsSection'
+import { ProcessSection } from './components/ProcessSection'
+import { TimelineSection } from './components/TimelineSection'
+import { ExtracurricularSection } from './components/ExtracurricularSection'
+import { TestimonialsSection } from './components/TestimonialsSection'
+import { ContactSection } from './components/ContactSection'
+import { Footer } from './components/Footer'
+export function App() {
+  const [isLoading, setIsLoading] = useState(true)
+  const [isDarkMode, setIsDarkMode] = useState(true) // Default to dark mode for premium feel
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const [showScrollTop, setShowScrollTop] = useState(false)
+  const [activeSection, setActiveSection] = useState('hero')
+  // Handle scroll events for progress bar, scroll-to-top button, and active section
+  useEffect(() => {
+    const handleScroll = () => {
+      // Scroll Progress
+      const totalScroll = document.documentElement.scrollTop
+      const windowHeight =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight
+      const scroll = `${totalScroll / windowHeight}`
+      setScrollProgress(Number(scroll) * 100)
+      // Scroll to Top Button Visibility
+      setShowScrollTop(totalScroll > 500)
+      // Active Section Detection
+      const sections = [
+        'hero',
+        'about',
+        'skills',
+        'projects',
+        'process',
+        'timeline',
+        'contact',
+      ]
+      for (const section of sections.reverse()) {
+        const element = document.getElementById(section)
+        if (element && totalScroll >= element.offsetTop - 200) {
+          setActiveSection(section)
+          break
+        }
+      }
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+  // Toggle Dark Mode
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode)
+  }
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+  }
+  return (
+    <div
+      className={`${isDarkMode ? 'dark' : ''} min-h-screen bg-soft-white dark:bg-navy transition-colors duration-300 font-inter`}
+    >
+      {/* Loading Screen */}
+      {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
+
+      {/* Scroll Progress Bar */}
+      <div className="fixed top-0 left-0 w-full h-1 z-50 bg-transparent">
+        <div
+          className="h-full bg-teal transition-all duration-100 ease-out"
+          style={{
+            width: `${scrollProgress}%`,
+          }}
+        />
+      </div>
+
+      {!isLoading && (
+        <>
+          <Navbar
+            isDarkMode={isDarkMode}
+            toggleDarkMode={toggleDarkMode}
+            activeSection={activeSection}
+          />
+
+          <main>
+            <HeroSection />
+            <AboutSection />
+            <SkillsSection />
+            <ProjectsSection />
+            <ProcessSection />
+            <TimelineSection />
+            <ExtracurricularSection />
+            <TestimonialsSection />
+            <ContactSection />
+          </main>
+
+          <Footer />
+
+          {/* Scroll to Top Button */}
+          <button
+            onClick={scrollToTop}
+            className={`fixed bottom-8 right-8 p-3 rounded-full bg-teal text-white shadow-lg shadow-teal/30 transition-all duration-500 z-40 hover:-translate-y-2 hover:shadow-teal/50 ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}
+            aria-label="Scroll to top"
+          >
+            <ArrowUp className="w-6 h-6" />
+          </button>
+        </>
+      )}
+    </div>
+  )
+}
+
+```
+```components/AboutSection.tsx
+import React, { useRef } from 'react'
+import { Search, Settings, BarChart3 } from 'lucide-react'
+import { useScrollAnimation } from '../hooks/useScrollAnimation'
+import { useCountUp } from '../hooks/useCountUp'
+export function AboutSection() {
+  const { ref: sectionRef, isVisible } = useScrollAnimation({
+    threshold: 0.2,
+  })
+  return (
+    <section
+      id="about"
+      className="py-24 relative bg-soft-white dark:bg-navy overflow-hidden"
+    >
+      {/* Blueprint Grid Background */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-50 pointer-events-none" />
+
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+        ref={sectionRef as React.RefObject<HTMLDivElement>}
+      >
+        <div
+          className={`text-center mb-16 transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        >
+          <h2 className="text-3xl md:text-4xl font-poppins font-bold text-navy dark:text-white inline-block relative">
+            About Me
+            <span className="absolute -bottom-2 left-1/4 right-1/4 h-1 bg-teal rounded-full" />
+          </h2>
+        </div>
+
+        <div
+          className={`glass-card rounded-2xl p-8 md:p-12 transition-all duration-1000 delay-200 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            {/* Left: Avatar */}
+            <div className="lg:col-span-4 flex justify-center">
+              <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full p-2">
+                {/* Animated Border */}
+                <div className="absolute inset-0 rounded-full border-2 border-teal animate-[spin_10s_linear_infinite] border-t-transparent" />
+                <div className="absolute inset-2 rounded-full border-2 border-cyan/50 animate-[spin_15s_linear_infinite_reverse] border-b-transparent" />
+
+                {/* Avatar Placeholder */}
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-navy-light to-teal flex items-center justify-center overflow-hidden shadow-2xl">
+                  <span className="text-6xl font-poppins font-bold text-white tracking-wider">
+                    PD
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Bio & Pillars */}
+            <div className="lg:col-span-8 space-y-8">
+              <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 font-inter leading-relaxed">
+                A detail-oriented Quality Management undergraduate passionate
+                about transforming inefficiencies into streamlined, data-backed
+                processes. Combining analytical thinking with lean methodologies
+                to drive measurable improvements.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+                {[
+                  {
+                    icon: Search,
+                    title: 'Analytical Thinking',
+                    color: 'text-insight-purple',
+                  },
+                  {
+                    icon: Settings,
+                    title: 'Process Optimization',
+                    color: 'text-teal',
+                  },
+                  {
+                    icon: BarChart3,
+                    title: 'Data-Driven Strategy',
+                    color: 'text-cyan',
+                  },
+                ].map((pillar, idx) => (
+                  <div
+                    key={idx}
+                    className="glass-card rounded-xl p-4 flex items-center space-x-4 hover:-translate-y-1 transition-transform duration-300"
+                  >
+                    <div
+                      className={`p-3 rounded-lg bg-gray-100 dark:bg-navy-light ${pillar.color}`}
+                    >
+                      <pillar.icon className="w-6 h-6" />
+                    </div>
+                    <span className="font-poppins font-medium text-sm text-navy dark:text-white">
+                      {pillar.title}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Stats Row */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-12 border-t border-gray-200 dark:border-navy-light">
+            <StatItem
+              value={4}
+              suffix="+"
+              label="Major Projects"
+              isVisible={isVisible}
+              delay={300}
+            />
+            <StatItem
+              value={5}
+              suffix="+"
+              label="Quality Tools Applied"
+              isVisible={isVisible}
+              delay={400}
+            />
+            <StatItem
+              value={50}
+              suffix="k+"
+              label="Data Points Analyzed"
+              isVisible={isVisible}
+              delay={500}
+            />
+            <StatItem
+              value={3}
+              suffix=""
+              label="Process Improvement Studies"
+              isVisible={isVisible}
+              delay={600}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+function StatItem({
+  value,
+  suffix,
+  label,
+  isVisible,
+  delay,
+}: {
+  value: number
+  suffix: string
+  label: string
+  isVisible: boolean
+  delay: number
+}) {
+  const count = useCountUp(value, 2000, isVisible)
+  return (
+    <div
+      className={`text-center transition-all duration-700 transform`}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+        transitionDelay: `${delay}ms`,
+      }}
+    >
+      <div className="text-4xl md:text-5xl font-poppins font-bold text-teal mb-2">
+        {count}
+        {suffix}
+      </div>
+      <div className="text-sm text-gray-600 dark:text-gray-400 font-inter uppercase tracking-wider">
+        {label}
+      </div>
+    </div>
+  )
+}
+
+```
+```components/ContactSection.tsx
+import React, { useState } from 'react'
+import { Mail, MapPin, Linkedin, Send, CheckCircle2 } from 'lucide-react'
+import { useScrollAnimation } from '../hooks/useScrollAnimation'
+export function ContactSection() {
+  const { ref, isVisible } = useScrollAnimation({
+    threshold: 0.2,
+  })
+  const [formState, setFormState] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setFormState({
+      ...formState,
+      [e.target.name]: e.target.value,
+    })
+  }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitting(false)
+      setIsSuccess(true)
+      setFormState({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+      })
+      // Reset success state after 5 seconds
+      setTimeout(() => setIsSuccess(false), 5000)
+    }, 1500)
+  }
+  return (
+    <section
+      id="contact"
+      className="py-24 bg-navy dark:bg-navy-dark relative overflow-hidden"
+    >
+      {/* Animated Map Grid Texture */}
+      <div
+        className="absolute inset-0 opacity-10"
+        style={{
+          backgroundImage:
+            'linear-gradient(#00C9A7 1px, transparent 1px), linear-gradient(90deg, #00C9A7 1px, transparent 1px)',
+          backgroundSize: '50px 50px',
+          backgroundPosition: 'center center',
+        }}
+      />
+
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+        ref={ref as React.RefObject<HTMLDivElement>}
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          {/* Left: Contact Details */}
+          <div
+            className={`space-y-10 transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}
+          >
+            <div>
+              <h2 className="text-4xl md:text-5xl font-poppins font-bold text-white mb-4">
+                Let's <span className="text-teal">Connect</span>
+              </h2>
+              <p className="text-gray-400 font-inter text-lg max-w-md">
+                Interested in discussing quality engineering, lean
+                methodologies, or potential opportunities? I'm always open to
+                connecting.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              {[
+                {
+                  icon: Mail,
+                  label: 'Email',
+                  value: 'poojani.dissanayake@email.com',
+                  href: 'mailto:poojani.dissanayake@email.com',
+                },
+                {
+                  icon: MapPin,
+                  label: 'Location',
+                  value: 'Sri Lanka',
+                  href: '#',
+                },
+                {
+                  icon: Linkedin,
+                  label: 'LinkedIn',
+                  value: 'Connect professionally',
+                  href: '#',
+                },
+              ].map((item, idx) => (
+                <a
+                  key={idx}
+                  href={item.href}
+                  className="group flex items-center p-4 rounded-xl bg-navy-light/50 border border-gray-800 hover:border-teal/50 hover:bg-teal/5 transition-all duration-300"
+                >
+                  <div className="w-12 h-12 rounded-full bg-navy border border-gray-700 flex items-center justify-center text-gray-400 group-hover:text-teal group-hover:border-teal transition-colors mr-6">
+                    <item.icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-500 uppercase tracking-wider font-medium mb-1">
+                      {item.label}
+                    </div>
+                    <div className="text-white font-poppins font-medium group-hover:text-teal transition-colors">
+                      {item.value}
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Contact Form */}
+          <div
+            className={`transition-all duration-700 delay-200 transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}
+          >
+            <div className="glass-card bg-navy-light/80 border border-gray-700 rounded-2xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
+              {/* Success Overlay */}
+              {isSuccess && (
+                <div className="absolute inset-0 bg-navy/95 backdrop-blur-sm z-20 flex flex-col items-center justify-center animate-fade-in">
+                  <div className="relative w-24 h-24 mb-6">
+                    <svg
+                      className="absolute inset-0 w-full h-full text-teal"
+                      viewBox="0 0 100 100"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        className="animate-draw-circle"
+                        strokeDasharray="251"
+                        strokeDashoffset="251"
+                      />
+                      <path
+                        d="M30 50 L45 65 L70 35"
+                        className="animate-draw-check"
+                        strokeDasharray="100"
+                        strokeDashoffset="100"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-poppins font-bold text-white mb-2">
+                    Message Sent!
+                  </h3>
+                  <p className="text-gray-400 font-inter text-center">
+                    Thank you for reaching out. I'll get back to you shortly.
+                  </p>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formState.name}
+                      onChange={handleChange}
+                      required
+                      className="block w-full px-4 pt-6 pb-2 bg-navy border-b-2 border-gray-700 text-white focus:outline-none focus:border-teal transition-colors peer rounded-t-md"
+                      placeholder=" "
+                    />
+                    <label
+                      htmlFor="name"
+                      className="absolute text-sm text-gray-500 duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-teal"
+                    >
+                      Your Name
+                    </label>
+                  </div>
+
+                  <div className="relative">
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formState.email}
+                      onChange={handleChange}
+                      required
+                      className="block w-full px-4 pt-6 pb-2 bg-navy border-b-2 border-gray-700 text-white focus:outline-none focus:border-teal transition-colors peer rounded-t-md"
+                      placeholder=" "
+                    />
+                    <label
+                      htmlFor="email"
+                      className="absolute text-sm text-gray-500 duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-teal"
+                    >
+                      Email Address
+                    </label>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    value={formState.subject}
+                    onChange={handleChange}
+                    required
+                    className="block w-full px-4 pt-6 pb-2 bg-navy border-b-2 border-gray-700 text-white focus:outline-none focus:border-teal transition-colors peer rounded-t-md"
+                    placeholder=" "
+                  />
+                  <label
+                    htmlFor="subject"
+                    className="absolute text-sm text-gray-500 duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-teal"
+                  >
+                    Subject
+                  </label>
+                </div>
+
+                <div className="relative">
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formState.message}
+                    onChange={handleChange}
+                    required
+                    rows={4}
+                    className="block w-full px-4 pt-6 pb-2 bg-navy border-b-2 border-gray-700 text-white focus:outline-none focus:border-teal transition-colors peer rounded-t-md resize-none"
+                    placeholder=" "
+                  />
+                  <label
+                    htmlFor="message"
+                    className="absolute text-sm text-gray-500 duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-teal"
+                  >
+                    Your Message
+                  </label>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-teal hover:bg-teal-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal focus:ring-offset-navy transition-colors overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {/* Ripple Effect Container */}
+                  <span className="absolute inset-0 w-full h-full bg-white/20 scale-0 group-active:scale-100 group-active:opacity-0 transition-all duration-500 rounded-full origin-center" />
+
+                  <span className="relative flex items-center text-lg font-poppins">
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                    {!isSubmitting && (
+                      <Send className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    )}
+                  </span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+```
+```components/ExtracurricularSection.tsx
+import React from 'react'
+import { Music, Medal, Leaf, Users, Smile, Mic } from 'lucide-react'
+import { useScrollAnimation } from '../hooks/useScrollAnimation'
+const activities = [
+  {
+    title: 'Visharad in North Indian Vocal Music',
+    icon: Music,
+    description:
+      'Completed advanced certification in Hindustani classical vocals, demonstrating long-term dedication and discipline.',
+    color: 'from-purple-500/20 to-pink-500/20',
+    iconColor: 'text-purple-500',
+  },
+  {
+    title: 'All Island Karate Championship',
+    icon: Medal,
+    description:
+      'Competed at national level demonstrating physical discipline, strategic thinking, and focus under pressure.',
+    color: 'from-orange-500/20 to-red-500/20',
+    iconColor: 'text-orange-500',
+  },
+  {
+    title: 'Nature Club Member',
+    icon: Leaf,
+    description:
+      'Active participant in environmental conservation initiatives and sustainability awareness campaigns.',
+    color: 'from-green-500/20 to-emerald-500/20',
+    iconColor: 'text-green-500',
+  },
+  {
+    title: 'Rotaract Member',
+    icon: Users,
+    description:
+      'Engaged in community service, project management, and leadership development activities.',
+    color: 'from-blue-500/20 to-indigo-500/20',
+    iconColor: 'text-blue-500',
+  },
+  {
+    title: 'Dancing Club',
+    icon: Smile,
+    description:
+      'Creative expression through traditional and contemporary dance, fostering teamwork and cultural appreciation.',
+    color: 'from-yellow-500/20 to-orange-500/20',
+    iconColor: 'text-yellow-500',
+  },
+  {
+    title: 'Unimedia Club',
+    icon: Mic,
+    description:
+      'Developed media production, event coordination, and public communication skills.',
+    color: 'from-cyan-500/20 to-blue-500/20',
+    iconColor: 'text-cyan-500',
+  },
+]
+export function ExtracurricularSection() {
+  const { ref, isVisible } = useScrollAnimation({
+    threshold: 0.1,
+  })
+  return (
+    <section className="py-24 bg-navy dark:bg-navy-dark relative overflow-hidden">
+      {/* Subtle background pattern */}
+      <div
+        className="absolute inset-0 opacity-5"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+          backgroundSize: '32px 32px',
+        }}
+      />
+
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+        ref={ref as React.RefObject<HTMLDivElement>}
+      >
+        <div
+          className={`text-center mb-16 transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        >
+          <h2 className="text-3xl md:text-4xl font-poppins font-bold text-white inline-block relative">
+            Beyond Academics
+            <span className="absolute -bottom-2 left-1/4 right-1/4 h-1 bg-teal rounded-full" />
+          </h2>
+          <p className="mt-4 text-gray-400 font-inter max-w-2xl mx-auto">
+            A well-rounded approach to personal development and community
+            engagement.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {activities.map((activity, idx) => (
+            <div
+              key={idx}
+              className={`group relative h-64 rounded-2xl overflow-hidden transition-all duration-700 transform`}
+              style={{
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                transitionDelay: `${idx * 100}ms`,
+              }}
+            >
+              {/* Card Background */}
+              <div className="absolute inset-0 bg-navy-light border border-gray-800 rounded-2xl transition-colors group-hover:border-gray-700" />
+
+              {/* Gradient Overlay */}
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${activity.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+              />
+
+              {/* Content - Default State */}
+              <div className="absolute inset-0 p-8 flex flex-col items-center justify-center text-center transition-transform duration-500 group-hover:-translate-y-full">
+                <div
+                  className={`w-16 h-16 rounded-full bg-navy flex items-center justify-center mb-4 ${activity.iconColor} shadow-lg`}
+                >
+                  <activity.icon className="w-8 h-8" />
+                </div>
+                <h3 className="text-lg font-poppins font-bold text-white">
+                  {activity.title}
+                </h3>
+              </div>
+
+              {/* Content - Hover State */}
+              <div className="absolute inset-0 p-8 flex flex-col items-center justify-center text-center translate-y-full transition-transform duration-500 group-hover:translate-y-0">
+                <p className="text-white font-inter text-sm leading-relaxed">
+                  {activity.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+```
+```components/Footer.tsx
+import React from 'react'
+import { Linkedin, Mail, Github } from 'lucide-react'
+export function Footer() {
+  const currentYear = new Date().getFullYear()
+  return (
+    <footer className="bg-navy-dark border-t border-teal/20 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex flex-col items-center justify-center space-y-8">
+          {/* Logo/Name */}
+          <div
+            className="text-center cursor-pointer"
+            onClick={() =>
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+              })
+            }
+          >
+            <span className="text-3xl font-poppins font-bold text-white tracking-wider">
+              PD<span className="text-teal">.</span>
+            </span>
+            <p className="mt-2 text-gray-400 font-inter text-sm uppercase tracking-widest">
+              Precision in Motion
+            </p>
+          </div>
+
+          {/* Social Links */}
+          <div className="flex space-x-6">
+            <a
+              href="#"
+              className="text-gray-400 hover:text-teal transition-colors duration-300"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className="w-6 h-6" />
+            </a>
+            <a
+              href="mailto:poojani.dissanayake@email.com"
+              className="text-gray-400 hover:text-teal transition-colors duration-300"
+              aria-label="Email"
+            >
+              <Mail className="w-6 h-6" />
+            </a>
+            <a
+              href="#"
+              className="text-gray-400 hover:text-teal transition-colors duration-300"
+              aria-label="GitHub"
+            >
+              <Github className="w-6 h-6" />
+            </a>
+          </div>
+
+          {/* Copyright */}
+          <div className="text-center border-t border-gray-800 w-full pt-8">
+            <p className="text-gray-500 font-inter text-sm">
+              Designed with precision by Poojani Dissanayake
+            </p>
+            <p className="text-gray-600 font-inter text-xs mt-2">
+              &copy; {currentYear} Poojani Dissanayake. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  )
+}
+
+```
+```components/HeroSection.tsx
+import React, { useEffect, useState, Fragment } from 'react'
+import { ArrowRight, Download } from 'lucide-react'
+export function HeroSection() {
+  const [textIndex, setTextIndex] = useState(0)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [currentText, setCurrentText] = useState('')
+  const phrases = [
+    'Process Optimizer',
+    'Quality Enthusiast',
+    'Data Explorer',
+    'Continuous Improvement Thinker',
+  ]
+  useEffect(() => {
+    const typingSpeed = isDeleting ? 50 : 100
+    const pauseTime = 2000
+    const timer = setTimeout(() => {
+      const fullText = phrases[textIndex]
+      if (!isDeleting && currentText === fullText) {
+        setTimeout(() => setIsDeleting(true), pauseTime)
+        return
+      }
+      if (isDeleting && currentText === '') {
+        setIsDeleting(false)
+        setTextIndex((prev) => (prev + 1) % phrases.length)
+        return
+      }
+      setCurrentText(
+        isDeleting
+          ? fullText.substring(0, currentText.length - 1)
+          : fullText.substring(0, currentText.length + 1),
+      )
+    }, typingSpeed)
+    return () => clearTimeout(timer)
+  }, [currentText, isDeleting, textIndex, phrases])
+  // Generate random particles
+  const particles = Array.from({
+    length: 20,
+  }).map((_, i) => ({
+    id: i,
+    size: Math.random() * 4 + 2,
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+    animationDuration: `${Math.random() * 10 + 10}s`,
+    animationDelay: `${Math.random() * 5}s`,
+  }))
+  return (
+    <section
+      id="hero"
+      className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-grid-pattern dark:bg-navy bg-soft-white"
+    >
+      {/* Background Gradient & Particles */}
+      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-navy-light/10 to-teal/5 dark:via-navy-light/50 dark:to-teal/10 pointer-events-none" />
+
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className="absolute rounded-full bg-teal/30 dark:bg-cyan/40 animate-float"
+          style={{
+            width: p.size,
+            height: p.size,
+            left: p.left,
+            top: p.top,
+            animationDuration: p.animationDuration,
+            animationDelay: p.animationDelay,
+          }}
+        />
+      ))}
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left Content */}
+          <div className="space-y-8 animate-slide-up">
+            <div className="inline-block px-4 py-1.5 rounded-full border border-teal/30 bg-teal/10 text-teal text-sm font-medium tracking-wide">
+              Quality Engineer in the Making
+            </div>
+
+            <div className="space-y-4">
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-poppins font-bold text-navy dark:text-white leading-tight">
+                Transforming <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal to-cyan">
+                  Processes
+                </span>{' '}
+                <br />
+                Into Performance
+              </h1>
+
+              <p className="text-xl text-gray-600 dark:text-gray-300 font-inter max-w-lg">
+                Industrial & Service Quality Management Undergraduate <br />
+                <span className="text-sm text-gray-500 dark:text-gray-400 mt-2 block">
+                  Lean | Six Sigma | Data Analytics
+                </span>
+              </p>
+            </div>
+
+            <div className="h-8 flex items-center text-xl sm:text-2xl font-poppins font-medium text-navy dark:text-white">
+              <span className="mr-2">I am a</span>
+              <span className="text-teal">{currentText}</span>
+              <span className="w-0.5 h-6 bg-teal ml-1 animate-pulse" />
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <button
+                onClick={() =>
+                  document.getElementById('projects')?.scrollIntoView({
+                    behavior: 'smooth',
+                  })
+                }
+                className="group relative px-8 py-4 bg-teal text-white rounded-lg font-medium overflow-hidden shadow-lg shadow-teal/20 hover:shadow-teal/40 transition-all duration-300"
+              >
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                <span className="relative flex items-center justify-center">
+                  View My Work
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </button>
+
+              <button className="group px-8 py-4 rounded-lg font-medium border-2 border-gray-200 dark:border-navy-light text-navy dark:text-white hover:border-teal dark:hover:border-teal hover:text-teal dark:hover:text-teal transition-colors duration-300 flex items-center justify-center glass-card">
+                Download CV
+                <Download className="ml-2 w-5 h-5 group-hover:-translate-y-1 transition-transform" />
+              </button>
+            </div>
+          </div>
+
+          {/* Right Visualization */}
+          <div
+            className="hidden lg:flex justify-center items-center h-[500px] relative animate-fade-in"
+            style={{
+              animationDelay: '0.3s',
+            }}
+          >
+            <div className="relative w-full h-full max-w-md">
+              {/* Central Node */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full bg-teal/20 border-2 border-teal flex items-center justify-center animate-pulse-glow z-20">
+                <div className="w-16 h-16 rounded-full bg-teal/40 backdrop-blur-sm flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-teal" />
+                </div>
+              </div>
+
+              {/* Orbiting Nodes */}
+              {[0, 72, 144, 216, 288].map((angle, i) => {
+                const radius = 140
+                const x = Math.cos((angle * Math.PI) / 180) * radius
+                const y = Math.sin((angle * Math.PI) / 180) * radius
+                return (
+                  <Fragment key={i}>
+                    {/* Connecting Line */}
+                    <svg className="absolute inset-0 w-full h-full z-10 pointer-events-none">
+                      <line
+                        x1="50%"
+                        y1="50%"
+                        x2={`calc(50% + ${x}px)`}
+                        y2={`calc(50% + ${y}px)`}
+                        stroke="currentColor"
+                        className="text-teal/30 dark:text-teal/20"
+                        strokeWidth="1"
+                        strokeDasharray="4 4"
+                      />
+                    </svg>
+
+                    {/* Node */}
+                    <div
+                      className="absolute w-12 h-12 rounded-full bg-white dark:bg-navy-light border border-gray-200 dark:border-navy-light shadow-lg flex items-center justify-center z-20 transition-transform duration-500 hover:scale-110 hover:border-cyan"
+                      style={{
+                        top: `calc(50% + ${y}px)`,
+                        left: `calc(50% + ${x}px)`,
+                        transform: 'translate(-50%, -50%)',
+                        animation: `float ${4 + i}s ease-in-out infinite`,
+                        animationDelay: `${i * 0.5}s`,
+                      }}
+                    >
+                      <div
+                        className={`w-4 h-4 rounded-full ${i % 2 === 0 ? 'bg-cyan' : 'bg-teal'}`}
+                      />
+                    </div>
+                  </Fragment>
+                )
+              })}
+
+              {/* Outer Ring */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] rounded-full border border-dashed border-gray-300 dark:border-navy-light animate-[spin_20s_linear_infinite] z-0 opacity-50" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full border border-gray-200 dark:border-navy-light/50 animate-[spin_30s_linear_infinite_reverse] z-0 opacity-30" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+```
+```components/Loader.tsx
+import React, { useEffect, useState } from 'react'
+interface LoaderProps {
+  onComplete: () => void
+}
+export function Loader({ onComplete }: LoaderProps) {
+  const [progress, setProgress] = useState(0)
+  const [isFading, setIsFading] = useState(false)
+  useEffect(() => {
+    const duration = 2000
+    const interval = 20
+    const steps = duration / interval
+    let currentStep = 0
+    const timer = setInterval(() => {
+      currentStep++
+      setProgress(Math.min((currentStep / steps) * 100, 100))
+      if (currentStep >= steps) {
+        clearInterval(timer)
+        setIsFading(true)
+        setTimeout(onComplete, 500) // Wait for fade out animation
+      }
+    }, interval)
+    return () => clearInterval(timer)
+  }, [onComplete])
+  return (
+    <div
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-navy transition-opacity duration-500 ${isFading ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+    >
+      <div className="relative w-32 h-32 mb-8 flex items-center justify-center">
+        {/* Hexagon SVG */}
+        <svg
+          className="absolute inset-0 w-full h-full text-teal animate-pulse-glow"
+          viewBox="0 0 100 100"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <polygon
+            points="50 5, 90 25, 90 75, 50 95, 10 75, 10 25"
+            strokeDasharray="300"
+            strokeDashoffset={300 - (progress / 100) * 300}
+            className="transition-all duration-75 ease-linear"
+          />
+        </svg>
+
+        <div className="text-4xl font-poppins font-bold text-white tracking-wider animate-fade-in">
+          PD
+        </div>
+      </div>
+
+      <div className="w-64 h-1 bg-navy-light rounded-full overflow-hidden">
+        <div
+          className="h-full bg-teal transition-all duration-75 ease-linear"
+          style={{
+            width: `${progress}%`,
+          }}
+        />
+      </div>
+      <div className="mt-4 text-teal font-inter text-sm tracking-widest uppercase">
+        Initializing Precision
+      </div>
+    </div>
+  )
+}
+
+```
+```components/Navbar.tsx
+import React, { useEffect, useState } from 'react'
+import { Sun, Moon, Menu, X } from 'lucide-react'
+interface NavbarProps {
+  isDarkMode: boolean
+  toggleDarkMode: () => void
+  activeSection: string
+}
+export function Navbar({
+  isDarkMode,
+  toggleDarkMode,
+  activeSection,
+}: NavbarProps) {
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+  const navLinks = [
+    {
+      name: 'About',
+      href: '#about',
+    },
+    {
+      name: 'Skills',
+      href: '#skills',
+    },
+    {
+      name: 'Projects',
+      href: '#projects',
+    },
+    {
+      name: 'Process',
+      href: '#process',
+    },
+    {
+      name: 'Timeline',
+      href: '#timeline',
+    },
+    {
+      name: 'Contact',
+      href: '#contact',
+    },
+  ]
+  const scrollToSection = (href: string) => {
+    setIsMobileMenuOpen(false)
+    const element = document.querySelector(href)
+    if (element) {
+      const offsetTop =
+        element.getBoundingClientRect().top + window.pageYOffset - 80
+      window.scrollTo({
+        top: offsetTop,
+        behavior: 'smooth',
+      })
+    }
+  }
+  return (
+    <nav
+      className={`fixed top-0 w-full z-40 transition-all duration-300 ${isScrolled ? 'bg-white/70 dark:bg-navy/80 backdrop-blur-md border-b border-gray-200 dark:border-navy-light shadow-sm py-3' : 'bg-transparent py-5'}`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center">
+          {/* Logo */}
+          <div
+            className="flex-shrink-0 cursor-pointer"
+            onClick={() =>
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+              })
+            }
+          >
+            <span className="text-2xl font-poppins font-bold text-navy dark:text-white tracking-wider">
+              PD<span className="text-teal">.</span>
+            </span>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            {navLinks.map((link) => (
+              <button
+                key={link.name}
+                onClick={() => scrollToSection(link.href)}
+                className={`text-sm font-medium transition-colors duration-200 hover:text-teal ${activeSection === link.name.toLowerCase() ? 'text-teal border-b-2 border-teal pb-1' : 'text-gray-600 dark:text-gray-300'}`}
+              >
+                {link.name}
+              </button>
+            ))}
+
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light transition-colors"
+              aria-label="Toggle Dark Mode"
+            >
+              {isDarkMode ? (
+                <Sun className="w-5 h-5 text-yellow-400" />
+              ) : (
+                <Moon className="w-5 h-5 text-navy" />
+              )}
+            </button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center space-x-4">
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light transition-colors"
+            >
+              {isDarkMode ? (
+                <Sun className="w-5 h-5 text-yellow-400" />
+              ) : (
+                <Moon className="w-5 h-5 text-navy" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-gray-600 dark:text-gray-300 hover:text-teal focus:outline-none"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden absolute top-full left-0 w-full bg-white dark:bg-navy border-b border-gray-200 dark:border-navy-light shadow-lg animate-fade-in">
+          <div className="px-4 pt-2 pb-6 space-y-1">
+            {navLinks.map((link) => (
+              <button
+                key={link.name}
+                onClick={() => scrollToSection(link.href)}
+                className={`block w-full text-left px-3 py-4 text-base font-medium border-b border-gray-100 dark:border-navy-light ${activeSection === link.name.toLowerCase() ? 'text-teal' : 'text-gray-600 dark:text-gray-300 hover:text-teal hover:bg-gray-50 dark:hover:bg-navy-light'}`}
+              >
+                {link.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </nav>
+  )
+}
+
+```
+```components/ProcessSection.tsx
+import React, { useState, createElement } from 'react'
+import {
+  Search,
+  GitBranch,
+  Settings,
+  BarChart3,
+  ChevronRight,
+} from 'lucide-react'
+import { useScrollAnimation } from '../hooks/useScrollAnimation'
+const steps = [
+  {
+    id: 1,
+    title: 'Identify Waste',
+    icon: Search,
+    description:
+      'Using Gemba walks, process observation, and data collection to identify non-value-adding activities and the 8 wastes of lean.',
+  },
+  {
+    id: 2,
+    title: 'Analyze Root Cause',
+    icon: GitBranch,
+    description:
+      'Applying fishbone diagrams, 5 Whys, and Pareto analysis to drill down to the true root cause of quality issues.',
+  },
+  {
+    id: 3,
+    title: 'Optimize Process',
+    icon: Settings,
+    description:
+      'Implementing kaizen events, standardized work, and poka-yoke solutions to eliminate waste and improve flow.',
+  },
+  {
+    id: 4,
+    title: 'Measure & Control',
+    icon: BarChart3,
+    description:
+      'Establishing control charts, KPIs, and feedback loops to sustain improvements and drive continuous enhancement.',
+  },
+]
+export function ProcessSection() {
+  const { ref, isVisible } = useScrollAnimation({
+    threshold: 0.2,
+  })
+  const [activeStep, setActiveStep] = useState(1)
+  return (
+    <section
+      id="process"
+      className="py-24 bg-navy dark:bg-navy-dark relative overflow-hidden"
+    >
+      {/* Background accents */}
+      <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-teal/20 to-transparent hidden lg:block" />
+
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+        ref={ref as React.RefObject<HTMLDivElement>}
+      >
+        <div
+          className={`text-center mb-16 transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        >
+          <h2 className="text-3xl md:text-4xl font-poppins font-bold text-white inline-block relative">
+            How I Think
+            <span className="absolute -bottom-2 left-1/4 right-1/4 h-1 bg-teal rounded-full" />
+          </h2>
+          <p className="mt-4 text-gray-400 font-inter max-w-2xl mx-auto">
+            A structured, data-driven approach to continuous improvement.
+          </p>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-12 items-center lg:items-start">
+          {/* Left: Flow Diagram */}
+          <div className="w-full lg:w-1/2 relative">
+            <div className="flex flex-col lg:flex-row justify-between relative z-10 gap-8 lg:gap-0">
+              {/* Connecting Line (Desktop) */}
+              <div className="hidden lg:block absolute top-1/2 left-10 right-10 h-0.5 bg-gray-800 -translate-y-1/2 z-0">
+                <div
+                  className="h-full bg-teal transition-all duration-500 ease-out"
+                  style={{
+                    width: `${((activeStep - 1) / 3) * 100}%`,
+                  }}
+                />
+              </div>
+
+              {/* Connecting Line (Mobile) */}
+              <div className="lg:hidden absolute left-8 top-10 bottom-10 w-0.5 bg-gray-800 z-0">
+                <div
+                  className="w-full bg-teal transition-all duration-500 ease-out"
+                  style={{
+                    height: `${((activeStep - 1) / 3) * 100}%`,
+                  }}
+                />
+              </div>
+
+              {steps.map((step, idx) => {
+                const isActive = activeStep === step.id
+                const isPast = activeStep > step.id
+                return (
+                  <div
+                    key={step.id}
+                    className={`relative z-10 flex flex-row lg:flex-col items-center gap-6 lg:gap-4 cursor-pointer group transition-all duration-500 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                    style={{
+                      transitionDelay: `${idx * 150}ms`,
+                    }}
+                    onClick={() => setActiveStep(step.id)}
+                  >
+                    <div
+                      className={`w-16 h-16 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${isActive ? 'bg-teal border-teal text-white shadow-[0_0_20px_rgba(0,201,167,0.4)] scale-110' : isPast ? 'bg-navy-light border-teal text-teal' : 'bg-navy-light border-gray-700 text-gray-500 group-hover:border-gray-500'}`}
+                    >
+                      <step.icon className="w-6 h-6" />
+                    </div>
+
+                    <div className="lg:text-center">
+                      <div
+                        className={`text-xs font-bold tracking-wider uppercase mb-1 ${isActive || isPast ? 'text-teal' : 'text-gray-600'}`}
+                      >
+                        Step {step.id}
+                      </div>
+                      <div
+                        className={`font-poppins font-medium transition-colors ${isActive ? 'text-white' : 'text-gray-400'}`}
+                      >
+                        {step.title}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Right: Explanation Panel */}
+          <div className="w-full lg:w-1/2">
+            <div className="glass-card bg-navy-light/50 border border-gray-800 rounded-2xl p-8 lg:p-12 min-h-[250px] relative overflow-hidden">
+              {/* Decorative large number */}
+              <div className="absolute -right-4 -bottom-10 text-[150px] font-poppins font-bold text-white/5 select-none pointer-events-none leading-none">
+                {activeStep}
+              </div>
+
+              <div className="relative z-10">
+                <div className="flex items-center mb-6">
+                  <div className="w-10 h-10 rounded-full bg-teal/20 flex items-center justify-center text-teal mr-4">
+                    {createElement(steps[activeStep - 1].icon, {
+                      className: 'w-5 h-5',
+                    })}
+                  </div>
+                  <h3 className="text-2xl font-poppins font-bold text-white">
+                    {steps[activeStep - 1].title}
+                  </h3>
+                </div>
+
+                <p
+                  className="text-lg text-gray-300 font-inter leading-relaxed animate-fade-in"
+                  key={activeStep}
+                >
+                  {steps[activeStep - 1].description}
+                </p>
+
+                <div
+                  className="mt-8 flex items-center text-teal text-sm font-medium uppercase tracking-wider cursor-pointer hover:text-cyan transition-colors"
+                  onClick={() =>
+                    setActiveStep((prev) => (prev < 4 ? prev + 1 : 1))
+                  }
+                >
+                  {activeStep < 4 ? 'Next Step' : 'Restart Process'}
+                  <ChevronRight className="w-4 h-4 ml-1" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+```
+```components/ProjectsSection.tsx
+import React, { useState } from 'react'
+import { useScrollAnimation } from '../hooks/useScrollAnimation'
+import { X, ExternalLink, BarChart, PieChart, TrendingUp } from 'lucide-react'
+interface Project {
+  id: string
+  title: string
+  problem: string
+  tools: string[]
+  impact: string
+  details: {
+    methodology: string
+    insights: string[]
+    lessons: string
+  }
+}
+const projectsData: Project[] = [
+  {
+    id: 'sales-analytics',
+    title: 'Global Sales Performance Analytics',
+    problem:
+      'Analyzing global sales trends across regions to identify growth opportunities',
+    tools: ['Power BI', 'Excel', 'SQL'],
+    impact: 'Identified 23% revenue optimization opportunity',
+    details: {
+      methodology:
+        'Extracted 3 years of historical sales data, cleaned anomalies, and built interactive dashboards to visualize regional performance vs targets.',
+      insights: [
+        'Q3 consistently underperformed in APAC region',
+        'Top 5% of products generated 40% of total revenue',
+        'Discounting strategies in EMEA negatively impacted margins by 12%',
+      ],
+      lessons:
+        'Learned the importance of data normalization before visualization and how to effectively communicate complex data stories to stakeholders.',
+    },
+  },
+  {
+    id: 'superstore',
+    title: 'Global Superstore Analysis',
+    problem:
+      'Deep-dive into superstore dataset to uncover operational inefficiencies',
+    tools: ['Python', 'Excel', 'Data Visualization'],
+    impact: 'Mapped 15+ KPIs across 4 market segments',
+    details: {
+      methodology:
+        'Utilized Python (Pandas/Matplotlib) to perform exploratory data analysis, identifying shipping bottlenecks and unprofitable product categories.',
+      insights: [
+        'Standard class shipping delays correlated with 15% drop in repeat customers',
+        'Furniture category in Southern region operated at a net loss',
+        'Seasonal demand spikes were not adequately forecasted',
+      ],
+      lessons:
+        'Gained proficiency in Python for data manipulation and understood how operational metrics directly tie to financial outcomes.',
+    },
+  },
+  {
+    id: 'university-service',
+    title: 'University Service Quality Improvement',
+    problem:
+      'Evaluating and improving service delivery quality in university operations',
+    tools: ['SERVQUAL', 'Statistical Analysis', 'Survey Design'],
+    impact: 'Proposed 5 actionable improvement strategies',
+    details: {
+      methodology:
+        'Designed and distributed a SERVQUAL questionnaire to 500+ students. Analyzed gaps between expected and perceived service quality.',
+      insights: [
+        'Largest gap identified in "Responsiveness" dimension',
+        'Library facilities met expectations, but IT support fell short',
+        'Communication channels were fragmented, causing student frustration',
+      ],
+      lessons:
+        'Mastered the SERVQUAL framework and learned how to quantify qualitative feedback into actionable operational changes.',
+    },
+  },
+  {
+    id: 'toyota-vsm',
+    title: 'Toyota Value Stream Mapping Study',
+    problem:
+      "Applying lean principles to map and optimize Toyota's production value stream",
+    tools: ['VSM', 'Lean Tools', 'Process Mapping'],
+    impact: 'Identified 30% waste reduction potential',
+    details: {
+      methodology:
+        'Created current state and future state value stream maps for a simulated production line, identifying bottlenecks and non-value-added activities.',
+      insights: [
+        'Inventory buildup between stations 2 and 3 caused 40% of lead time',
+        'Changeover times were excessive compared to industry benchmarks',
+        'Implementing a pull system could reduce WIP by 50%',
+      ],
+      lessons:
+        'Deepened understanding of Lean manufacturing principles and the practical application of Value Stream Mapping to visualize flow.',
+    },
+  },
+]
+export function ProjectsSection() {
+  const { ref, isVisible } = useScrollAnimation({
+    threshold: 0.1,
+  })
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget
+    const rect = card.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
+    const rotateX = ((y - centerY) / centerY) * -10
+    const rotateY = ((x - centerX) / centerX) * 10
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`
+  }
+  const handleCardMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget
+    card.style.transform =
+      'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)'
+  }
+  return (
+    <section
+      id="projects"
+      className="py-24 bg-soft-white dark:bg-navy relative"
+    >
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        ref={ref as React.RefObject<HTMLDivElement>}
+      >
+        <div
+          className={`text-center mb-16 transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        >
+          <h2 className="text-3xl md:text-4xl font-poppins font-bold text-navy dark:text-white inline-block relative">
+            Featured Case Studies
+            <span className="absolute -bottom-2 left-1/4 right-1/4 h-1 bg-teal rounded-full" />
+          </h2>
+          <p className="mt-4 text-gray-600 dark:text-gray-400 font-inter max-w-2xl mx-auto">
+            Practical applications of quality management, lean thinking, and
+            data analytics to solve real-world problems.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {projectsData.map((project, idx) => (
+            <div
+              key={project.id}
+              className={`glass-card rounded-2xl p-8 transition-all duration-700 transform cursor-pointer border border-gray-200 dark:border-navy-light hover:border-teal/50 dark:hover:border-teal/50 group`}
+              style={{
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                transitionDelay: `${idx * 150}ms`,
+                transitionProperty:
+                  'opacity, transform, border-color, box-shadow',
+              }}
+              onMouseMove={handleCardMouseMove}
+              onMouseLeave={handleCardMouseLeave}
+              onClick={() => setSelectedProject(project)}
+            >
+              <div className="flex justify-between items-start mb-6">
+                <h3 className="text-2xl font-poppins font-bold text-navy dark:text-white group-hover:text-teal transition-colors">
+                  {project.title}
+                </h3>
+                <div className="p-2 bg-teal/10 rounded-full text-teal opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ExternalLink className="w-5 h-5" />
+                </div>
+              </div>
+
+              <p className="text-gray-600 dark:text-gray-300 font-inter mb-6 line-clamp-2">
+                {project.problem}
+              </p>
+
+              <div className="flex flex-wrap gap-2 mb-8">
+                {project.tools.map((tool) => (
+                  <span
+                    key={tool}
+                    className="px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-navy-light text-gray-700 dark:text-gray-300 rounded-full border border-gray-200 dark:border-gray-700"
+                  >
+                    {tool}
+                  </span>
+                ))}
+              </div>
+
+              <div className="pt-6 border-t border-gray-100 dark:border-navy-light flex items-center justify-between">
+                <div>
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                    Impact
+                  </span>
+                  <span className="font-poppins font-semibold text-teal">
+                    {project.impact}
+                  </span>
+                </div>
+                <button className="text-sm font-medium text-navy dark:text-white group-hover:text-teal transition-colors flex items-center">
+                  View Case Study
+                  <span className="ml-1 transition-transform group-hover:translate-x-1">
+                    →
+                  </span>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Modal Overlay */}
+      {selectedProject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+          <div
+            className="absolute inset-0 bg-navy/80 backdrop-blur-sm animate-fade-in"
+            onClick={() => setSelectedProject(null)}
+          />
+
+          <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto glass-card bg-white dark:bg-navy rounded-2xl shadow-2xl animate-slide-up">
+            <button
+              onClick={() => setSelectedProject(null)}
+              className="absolute top-6 right-6 p-2 rounded-full bg-gray-100 dark:bg-navy-light text-gray-500 hover:text-navy dark:hover:text-white transition-colors z-10"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="p-8 sm:p-12">
+              <div className="mb-8">
+                <h2 className="text-3xl sm:text-4xl font-poppins font-bold text-navy dark:text-white mb-4 pr-12">
+                  {selectedProject.title}
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {selectedProject.tools.map((tool) => (
+                    <span
+                      key={tool}
+                      className="px-3 py-1 text-sm font-medium bg-teal/10 text-teal rounded-full border border-teal/20"
+                    >
+                      {tool}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-12">
+                {/* 1. Problem & 2. Methodology */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <h4 className="flex items-center text-lg font-poppins font-semibold text-navy dark:text-white mb-3">
+                      <span className="flex items-center justify-center w-6 h-6 rounded-full bg-teal text-white text-xs mr-3">
+                        1
+                      </span>
+                      The Problem
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-300 font-inter leading-relaxed">
+                      {selectedProject.problem}
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="flex items-center text-lg font-poppins font-semibold text-navy dark:text-white mb-3">
+                      <span className="flex items-center justify-center w-6 h-6 rounded-full bg-teal text-white text-xs mr-3">
+                        2
+                      </span>
+                      Methodology
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-300 font-inter leading-relaxed">
+                      {selectedProject.details.methodology}
+                    </p>
+                  </div>
+                </div>
+
+                {/* 4. Data Analysis Visualization Placeholder */}
+                <div className="bg-gray-50 dark:bg-navy-light rounded-xl p-6 border border-gray-200 dark:border-gray-800">
+                  <h4 className="flex items-center text-lg font-poppins font-semibold text-navy dark:text-white mb-6">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-teal text-white text-xs mr-3">
+                      3
+                    </span>
+                    Data Analysis
+                  </h4>
+
+                  <div className="h-64 flex items-end justify-between gap-2 px-4">
+                    {[40, 65, 30, 85, 55, 90, 45].map((height, i) => (
+                      <div key={i} className="w-full relative group">
+                        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-navy text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                          Data Point {i + 1}
+                        </div>
+                        <div
+                          className="w-full bg-gradient-to-t from-teal/50 to-cyan rounded-t-sm transition-all duration-1000 ease-out hover:from-teal hover:to-cyan-light"
+                          style={{
+                            height: '0%',
+                            animation: `slideUp 1s ease-out forwards ${i * 0.1}s`,
+                          }}
+                          ref={(el) => {
+                            if (el)
+                              setTimeout(
+                                () => (el.style.height = `${height}%`),
+                                100,
+                              )
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex justify-between mt-4 text-xs text-gray-500 font-medium uppercase tracking-wider border-t border-gray-200 dark:border-gray-700 pt-4">
+                    <span>Baseline</span>
+                    <span>Optimization Phase</span>
+                    <span>Target Reached</span>
+                  </div>
+                </div>
+
+                {/* 5. Insights & 6. Impact */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <h4 className="flex items-center text-lg font-poppins font-semibold text-navy dark:text-white mb-4">
+                      <span className="flex items-center justify-center w-6 h-6 rounded-full bg-teal text-white text-xs mr-3">
+                        4
+                      </span>
+                      Key Insights
+                    </h4>
+                    <ul className="space-y-3">
+                      {selectedProject.details.insights.map((insight, i) => (
+                        <li key={i} className="flex items-start">
+                          <div className="w-1.5 h-1.5 rounded-full bg-cyan mt-2 mr-3 flex-shrink-0" />
+                          <span className="text-gray-600 dark:text-gray-300 font-inter">
+                            {insight}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-teal/5 dark:bg-teal/10 rounded-xl p-6 border border-teal/20">
+                    <h4 className="flex items-center text-lg font-poppins font-semibold text-navy dark:text-white mb-2">
+                      <span className="flex items-center justify-center w-6 h-6 rounded-full bg-teal text-white text-xs mr-3">
+                        5
+                      </span>
+                      Business Impact
+                    </h4>
+                    <div className="text-3xl font-poppins font-bold text-teal my-4">
+                      {selectedProject.impact}
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 font-inter">
+                      Measurable outcome achieved through applied methodologies.
+                    </p>
+                  </div>
+                </div>
+
+                {/* 7. Lessons Learned */}
+                <div className="border-t border-gray-200 dark:border-navy-light pt-8">
+                  <h4 className="flex items-center text-lg font-poppins font-semibold text-navy dark:text-white mb-3">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-teal text-white text-xs mr-3">
+                      6
+                    </span>
+                    Lessons Learned
+                  </h4>
+                  <p className="text-gray-600 dark:text-gray-300 font-inter italic border-l-4 border-teal pl-4 py-2 bg-gray-50 dark:bg-navy-light/50 rounded-r-lg">
+                    "{selectedProject.details.lessons}"
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  )
+}
+
+```
+```components/SkillsSection.tsx
+import React, { useState } from 'react'
+import { useScrollAnimation } from '../hooks/useScrollAnimation'
+export function SkillsSection() {
+  const [activeTab, setActiveTab] = useState<'quality' | 'tools' | 'soft'>(
+    'quality',
+  )
+  const { ref, isVisible } = useScrollAnimation({
+    threshold: 0.2,
+  })
+  return (
+    <section
+      id="skills"
+      className="py-24 bg-navy dark:bg-navy-dark relative overflow-hidden"
+    >
+      {/* Glowing Accents */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-teal/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+        ref={ref as React.RefObject<HTMLDivElement>}
+      >
+        <div
+          className={`text-center mb-12 transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        >
+          <h2 className="text-3xl md:text-4xl font-poppins font-bold text-white inline-block relative">
+            Technical Arsenal
+            <span className="absolute -bottom-2 left-1/4 right-1/4 h-1 bg-teal rounded-full" />
+          </h2>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex justify-center mb-12">
+          <div className="inline-flex bg-navy-light rounded-lg p-1">
+            {[
+              {
+                id: 'quality',
+                label: 'Quality Management',
+              },
+              {
+                id: 'tools',
+                label: 'Analytics & Tools',
+              },
+              {
+                id: 'soft',
+                label: 'Soft Skills',
+              },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`px-6 py-2.5 rounded-md text-sm font-medium transition-all duration-300 ${activeTab === tab.id ? 'bg-teal text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-navy-light/50'}`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="min-h-[400px]">
+          {/* Quality Management Tab */}
+          <div
+            className={`transition-all duration-500 ${activeTab === 'quality' ? 'opacity-100 translate-x-0' : 'opacity-0 absolute -translate-x-10 pointer-events-none'}`}
+          >
+            <div className="max-w-3xl mx-auto space-y-6">
+              {[
+                {
+                  name: 'Value Stream Mapping',
+                  value: 85,
+                },
+                {
+                  name: 'Root Cause Analysis',
+                  value: 80,
+                },
+                {
+                  name: 'ISO 9001 Awareness',
+                  value: 75,
+                },
+                {
+                  name: 'Lean Concepts',
+                  value: 90,
+                },
+                {
+                  name: 'Six Sigma Foundations',
+                  value: 70,
+                },
+              ].map((skill, idx) => (
+                <div key={idx} className="space-y-2">
+                  <div className="flex justify-between text-sm font-medium text-white">
+                    <span>{skill.name}</span>
+                    <span className="text-teal">{skill.value}%</span>
+                  </div>
+                  <div className="h-2 bg-navy-light rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-teal to-cyan rounded-full transition-all duration-1500 ease-out"
+                      style={{
+                        width:
+                          isVisible && activeTab === 'quality'
+                            ? `${skill.value}%`
+                            : '0%',
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Analytics & Tools Tab */}
+          <div
+            className={`transition-all duration-500 ${activeTab === 'tools' ? 'opacity-100 translate-x-0' : 'opacity-0 absolute translate-x-10 pointer-events-none'}`}
+          >
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+              {[
+                {
+                  name: 'Power BI',
+                  level: 'Advanced',
+                  icon: '📊',
+                },
+                {
+                  name: 'Excel',
+                  level: 'Advanced',
+                  icon: '📈',
+                },
+                {
+                  name: 'SQL',
+                  level: 'Intermediate',
+                  icon: '💾',
+                },
+                {
+                  name: 'Python',
+                  level: 'Intermediate',
+                  icon: '🐍',
+                },
+                {
+                  name: 'HTML/CSS',
+                  level: 'Familiar',
+                  icon: '🌐',
+                },
+              ].map((tool, idx) => (
+                <div
+                  key={idx}
+                  className="group bg-navy-light border border-gray-800 rounded-xl p-6 text-center hover:-translate-y-2 hover:border-teal/50 hover:shadow-[0_0_20px_rgba(0,201,167,0.2)] transition-all duration-300"
+                  style={{
+                    perspective: '1000px',
+                  }}
+                >
+                  <div className="text-4xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                    {tool.icon}
+                  </div>
+                  <h3 className="text-white font-poppins font-medium mb-1">
+                    {tool.name}
+                  </h3>
+                  <p className="text-xs text-teal uppercase tracking-wider">
+                    {tool.level}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Soft Skills Tab */}
+          <div
+            className={`transition-all duration-500 ${activeTab === 'soft' ? 'opacity-100 translate-x-0' : 'opacity-0 absolute translate-x-10 pointer-events-none'}`}
+          >
+            <div className="relative h-[400px] flex items-center justify-center">
+              <div className="absolute w-64 h-64 rounded-full border border-dashed border-gray-700 animate-[spin_40s_linear_infinite]" />
+              <div className="absolute w-96 h-96 rounded-full border border-gray-800 animate-[spin_60s_linear_infinite_reverse]" />
+
+              <div className="w-24 h-24 rounded-full bg-teal/20 border-2 border-teal flex items-center justify-center z-10 shadow-[0_0_30px_rgba(0,201,167,0.3)]">
+                <span className="text-white font-poppins font-bold text-center leading-tight">
+                  Soft
+                  <br />
+                  Skills
+                </span>
+              </div>
+
+              {[
+                'Leadership',
+                'Communication',
+                'Time Management',
+                'Teamwork',
+                'Attention to Detail',
+              ].map((skill, i, arr) => {
+                const angle = (i * 360) / arr.length
+                const radius = 140
+                const x = Math.cos((angle * Math.PI) / 180) * radius
+                const y = Math.sin((angle * Math.PI) / 180) * radius
+                return (
+                  <div
+                    key={i}
+                    className="absolute px-4 py-2 bg-navy-light border border-gray-700 rounded-full text-white text-sm font-medium whitespace-nowrap shadow-lg hover:border-teal hover:text-teal transition-colors cursor-default"
+                    style={{
+                      transform: `translate(${x}px, ${y}px)`,
+                      animation: `float ${3 + i}s ease-in-out infinite`,
+                      animationDelay: `${i * 0.5}s`,
+                    }}
+                  >
+                    {skill}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+```
+```components/TestimonialsSection.tsx
+import React from 'react'
+import { Quote, Linkedin } from 'lucide-react'
+import { useScrollAnimation } from '../hooks/useScrollAnimation'
+const testimonials = [
+  {
+    quote:
+      'A dedicated student who demonstrates exceptional analytical thinking and a genuine passion for quality improvement methodologies. Poojani consistently applies theoretical concepts to practical scenarios with impressive clarity.',
+    name: 'Dr. Sanjaya Jayasooriya',
+    title: 'Dean – Faculty of Industrial Studies',
+    institution: 'General Sir John Kotelawala Defence University',
+    linkedin: '#',
+  },
+  {
+    quote:
+      'Shows remarkable attention to detail and a strong foundation in scientific methodology that translates well into quality management practices. Her ability to synthesize complex data into actionable insights is commendable.',
+    name: 'Ms. Nishadi Rajapakshe',
+    title: 'Senior Lecturer',
+    institution: 'Institute of Chemistry Ceylon',
+    linkedin: '#',
+  },
+]
+export function TestimonialsSection() {
+  const { ref, isVisible } = useScrollAnimation({
+    threshold: 0.2,
+  })
+  return (
+    <section className="py-24 bg-soft-white dark:bg-navy relative overflow-hidden">
+      {/* Decorative SVG Waves */}
+      <div className="absolute top-0 left-0 w-full overflow-hidden leading-none rotate-180">
+        <svg
+          className="relative block w-full h-[50px] text-navy dark:text-navy-dark"
+          data-name="Layer 1"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+            fill="currentColor"
+          ></path>
+        </svg>
+      </div>
+
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-12"
+        ref={ref as React.RefObject<HTMLDivElement>}
+      >
+        <div
+          className={`text-center mb-16 transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        >
+          <h2 className="text-3xl md:text-4xl font-poppins font-bold text-navy dark:text-white inline-block relative">
+            Professional References
+            <span className="absolute -bottom-2 left-1/4 right-1/4 h-1 bg-teal rounded-full" />
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {testimonials.map((testimonial, idx) => (
+            <div
+              key={idx}
+              className={`glass-card relative p-8 md:p-10 rounded-2xl border border-gray-200 dark:border-navy-light hover:border-teal/30 dark:hover:border-teal/30 transition-all duration-500 transform group`}
+              style={{
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                transitionDelay: `${idx * 200}ms`,
+              }}
+            >
+              {/* Large Quote Icon Background */}
+              <Quote className="absolute top-6 right-6 w-24 h-24 text-gray-100 dark:text-navy-light opacity-50 -z-10 group-hover:text-teal/10 transition-colors duration-500" />
+
+              <div className="relative z-10">
+                <p className="text-lg text-gray-700 dark:text-gray-300 font-inter italic leading-relaxed mb-8">
+                  "{testimonial.quote}"
+                </p>
+
+                <div className="flex items-center justify-between border-t border-gray-100 dark:border-navy-light pt-6 mt-auto">
+                  <div>
+                    <h4 className="font-poppins font-bold text-navy dark:text-white text-lg">
+                      {testimonial.name}
+                    </h4>
+                    <p className="text-sm text-teal font-medium mb-1">
+                      {testimonial.title}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      {testimonial.institution}
+                    </p>
+                  </div>
+
+                  <a
+                    href={testimonial.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 rounded-full bg-gray-50 dark:bg-navy-light text-gray-400 hover:text-teal hover:bg-teal/10 transition-colors duration-300"
+                    aria-label={`LinkedIn profile of ${testimonial.name}`}
+                  >
+                    <Linkedin className="w-5 h-5" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+```
+```components/TimelineSection.tsx
+import React from 'react'
+import { Award, GraduationCap, BookOpen, Building2 } from 'lucide-react'
+import { useScrollAnimation } from '../hooks/useScrollAnimation'
+const milestones = [
+  {
+    year: '2020',
+    title: 'ICT & English Diploma',
+    icon: Award,
+    description:
+      'Built foundational skills in information technology and professional communication.',
+    align: 'left',
+  },
+  {
+    year: '2022',
+    title: 'A/L Completed',
+    icon: GraduationCap,
+    description:
+      'Successfully completed Advanced Level examinations with a focus on analytical subjects.',
+    align: 'right',
+  },
+  {
+    year: '2023',
+    title: 'British Council Certification',
+    icon: BookOpen,
+    description:
+      'Achieved advanced proficiency in English language and communication.',
+    align: 'left',
+  },
+  {
+    year: '2025–2028',
+    title: 'BSc (Hons) Industrial & Service Quality Management',
+    icon: Building2,
+    description:
+      'General Sir John Kotelawala Defence University. Focusing on Lean, Six Sigma, and Data Analytics.',
+    align: 'right',
+    highlight: true,
+  },
+]
+export function TimelineSection() {
+  const { ref, isVisible } = useScrollAnimation({
+    threshold: 0.1,
+  })
+  return (
+    <section
+      id="timeline"
+      className="py-24 bg-soft-white dark:bg-navy relative"
+    >
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        ref={ref as React.RefObject<HTMLDivElement>}
+      >
+        <div
+          className={`text-center mb-20 transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        >
+          <h2 className="text-3xl md:text-4xl font-poppins font-bold text-navy dark:text-white inline-block relative">
+            Academic Journey
+            <span className="absolute -bottom-2 left-1/4 right-1/4 h-1 bg-teal rounded-full" />
+          </h2>
+        </div>
+
+        <div className="relative max-w-4xl mx-auto">
+          {/* Central Line */}
+          <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-teal/20 via-teal to-cyan/20 -translate-x-1/2 rounded-full" />
+
+          <div className="space-y-12">
+            {milestones.map((milestone, idx) => {
+              const isLeft = milestone.align === 'left'
+              return (
+                <div
+                  key={idx}
+                  className={`relative flex flex-col md:flex-row items-start md:items-center ${isLeft ? 'md:flex-row-reverse' : ''} transition-all duration-700 transform`}
+                  style={{
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible ? 'translateY(0)' : `translateY(50px)`,
+                    transitionDelay: `${idx * 200}ms`,
+                  }}
+                >
+                  {/* Content Card */}
+                  <div
+                    className={`w-full md:w-1/2 pl-20 md:pl-0 ${isLeft ? 'md:pr-16 text-left md:text-right' : 'md:pl-16 text-left'}`}
+                  >
+                    <div
+                      className={`glass-card p-6 rounded-2xl border ${milestone.highlight ? 'border-teal/50 shadow-[0_0_15px_rgba(0,201,167,0.15)]' : 'border-gray-200 dark:border-navy-light'} hover:-translate-y-1 transition-transform duration-300`}
+                    >
+                      <span className="inline-block px-3 py-1 bg-teal/10 text-teal text-sm font-bold rounded-full mb-3">
+                        {milestone.year}
+                      </span>
+                      <h3 className="text-xl font-poppins font-bold text-navy dark:text-white mb-2">
+                        {milestone.title}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400 font-inter text-sm leading-relaxed">
+                        {milestone.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Center Node */}
+                  <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-white dark:bg-navy border-4 border-teal flex items-center justify-center z-10 shadow-[0_0_15px_rgba(0,201,167,0.3)]">
+                    <milestone.icon className="w-5 h-5 text-teal" />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+```
+```hooks/useCountUp.ts
+import { useState, useEffect } from 'react'
+
+export function useCountUp(
+  end: number,
+  duration: number = 2000,
+  trigger: boolean = true,
+) {
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    if (!trigger) return
+
+    let startTime: number | null = null
+    let animationFrame: number
+
+    const easeOutQuart = (x: number): number => {
+      return 1 - Math.pow(1 - x, 4)
+    }
+
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime
+      const progress = Math.min((currentTime - startTime) / duration, 1)
+
+      const currentCount = Math.floor(easeOutQuart(progress) * end)
+      setCount(currentCount)
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate)
+      } else {
+        setCount(end)
+      }
+    }
+
+    animationFrame = requestAnimationFrame(animate)
+
+    return () => cancelAnimationFrame(animationFrame)
+  }, [end, duration, trigger])
+
+  return count
+}
+
+```
+```hooks/useScrollAnimation.ts
+import { useState, useEffect, useRef } from 'react'
+
+interface UseScrollAnimationOptions {
+  threshold?: number
+  rootMargin?: string
+  triggerOnce?: boolean
+}
+
+export function useScrollAnimation({
+  threshold = 0.1,
+  rootMargin = '0px',
+  triggerOnce = true,
+}: UseScrollAnimationOptions = {}) {
+  const [isVisible, setIsVisible] = useState(false)
+  const ref = useRef<HTMLElement | null>(null)
+
+  useEffect(() => {
+    const element = ref.current
+    if (!element) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          if (triggerOnce) {
+            observer.unobserve(element)
+          }
+        } else if (!triggerOnce) {
+          setIsVisible(false)
+        }
+      },
+      { threshold, rootMargin },
+    )
+
+    observer.observe(element)
+
+    return () => {
+      if (element) {
+        observer.unobserve(element)
+      }
+    }
+  }, [threshold, rootMargin, triggerOnce])
+
+  return { ref, isVisible }
+}
+
+```
+```index.css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600;700&display=swap');
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  :root {
+    --bg-primary: #F8FAFC;
+    --bg-secondary: #FFFFFF;
+    --text-primary: #0B1C2D;
+    --text-secondary: #475569;
+    --border-color: rgba(11, 28, 45, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(11, 28, 45, 0.1);
+  }
+  .dark {
+    --bg-primary: #0B1C2D;
+    --bg-secondary: #152A40;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --border-color: rgba(248, 250, 252, 0.1);
+    --glass-bg: rgba(11, 28, 45, 0.6);
+    --glass-border: rgba(248, 250, 252, 0.1);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-[var(--bg-primary)] text-[var(--text-primary)] font-inter antialiased transition-colors duration-300;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-poppins;
+  }
+}
+@layer utilities {
+  .glass-card {
+    @apply bg-[var(--glass-bg)] backdrop-blur-xl border border-[var(--glass-border)] shadow-lg;
+  }
+  .text-micro {
+    @apply text-[13px] uppercase tracking-widest font-medium;
+  }
+  .bg-grid-pattern {
+    background-image: linear-gradient(to right, var(--border-color) 1px, transparent 1px),
+                      linear-gradient(to bottom, var(--border-color) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+}
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-[var(--bg-primary)];
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-teal rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-teal-dark;
+}
+
+```
+```index.tsx
+import "./index.css";
+import React from "react";
+import { render } from "react-dom";
+import { App } from "./App";
+
+render(<App />, document.getElementById("root"));
+
+```
+```tailwind.config.js
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./*.{js,ts,jsx,tsx}"
+  ],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        navy: {
+          DEFAULT: '#0B1C2D',
+          light: '#152A40',
+          dark: '#050E17',
+        },
+        teal: {
+          DEFAULT: '#00C9A7',
+          light: '#33D4B9',
+          dark: '#00A085',
+        },
+        cyan: {
+          DEFAULT: '#00F5FF',
+          light: '#33F7FF',
+          dark: '#00C3CC',
+        },
+        'soft-white': '#F8FAFC',
+        'muted-gray': '#94A3B8',
+        'roi-green': '#22C55E',
+        'alert-orange': '#F97316',
+        'insight-purple': '#8B5CF6',
+      },
+      fontFamily: {
+        poppins: ['Poppins', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.6s ease-out forwards',
+        'slide-up': 'slideUp 0.6s ease-out forwards',
+        'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'float': 'float 6s ease-in-out infinite',
+        'typing': 'typing 3.5s steps(40, end), blink .75s step-end infinite',
+        'draw-circle': 'drawCircle 0.6s ease-out forwards',
+        'draw-check': 'drawCheck 0.4s 0.6s ease-out forwards',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(30px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        pulseGlow: {
+          '0%, 100%': { opacity: '1', boxShadow: '0 0 0 0 rgba(0, 201, 167, 0.4)' },
+          '50%': { opacity: '.8', boxShadow: '0 0 0 10px rgba(0, 201, 167, 0)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        typing: {
+          from: { width: '0' },
+          to: { width: '100%' },
+        },
+        blink: {
+          'from, to': { borderColor: 'transparent' },
+          '50%': { borderColor: '#00C9A7' },
+        },
+        drawCircle: {
+          '0%': { strokeDasharray: '0, 100' },
+          '100%': { strokeDasharray: '100, 100' },
+        },
+        drawCheck: {
+          '0%': { strokeDasharray: '0, 100' },
+          '100%': { strokeDasharray: '100, 100' },
+        },
+      },
+    },
+  },
+  plugins: [],
+}
+
+```

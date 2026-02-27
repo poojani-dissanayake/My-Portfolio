@@ -1,83 +1,64 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600;700&display=swap');
 
-/* ===== CSS VARIABLES — MINIMAL SAAS THEME (2026) ===== */
-:root {
-  --bg-primary: #fcf9f6;
-  --bg-secondary: #f5eee7;
-  --bg-gradient: linear-gradient(180deg, #fcf9f6 0%, #f5eee7 100%);
-  --bg-hero: radial-gradient(circle at top center, rgba(172, 137, 104, 0.18) 0%, #fcf9f6 62%);
-  
-  /* Soft Lavender / Blue Accents */
-  --accent-strong: #3E362E;
-  --accent: #865D36;
-  --accent-muted: #93785B;
-  --accent2: #AC8968;
-  --accent-soft: #A69080;
-  --accent-gradient: linear-gradient(135deg, #865D36, #AC8968);
-  --accent-light: rgba(172, 137, 104, 0.14);
-  
-  /* Typography */
-  --text: #3E362E;
-  --text-muted: #93785B;
-  --text-light: #A69080;
-  
-  /* Borders & Shadows */
-  --border-color: rgba(147, 120, 91, 0.2);
-  --card-bg: #fffdfa;
-  --card-shadow: 0 4px 24px rgba(62, 54, 46, 0.06);
-  --card-hover-shadow: 0 12px 32px rgba(62, 54, 46, 0.1);
-  
-  /* Glass */
-  --header-bg: rgba(252, 249, 246, 0.82);
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* ===== RESET ===== */
-*, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg-primary);
-  color: var(--text);
-  overflow-x: hidden;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#root {
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  text-align: left;
-}
-
-::selection {
-  background: var(--accent-light);
-  color: var(--accent);
-}
-
-::-webkit-scrollbar { width: 6px }
-::-webkit-scrollbar-track { background: transparent }
-::-webkit-scrollbar-thumb { background: rgba(166, 144, 128, 0.6); border-radius: 10px }
-::-webkit-scrollbar-thumb:hover { background: #AC8968 }
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-@media (max-width: 768px) {
-  .section-wrapper {
-    padding: 80px 5% 60px;
+@layer base {
+  :root {
+    --bg-primary: #F8FAFC;
+    --bg-secondary: #FFFFFF;
+    --text-primary: #0B1C2D;
+    --text-secondary: #475569;
+    --border-color: rgba(11, 28, 45, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(11, 28, 45, 0.1);
   }
+  .dark {
+    --bg-primary: #0B1C2D;
+    --bg-secondary: #152A40;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --border-color: rgba(248, 250, 252, 0.1);
+    --glass-bg: rgba(11, 28, 45, 0.6);
+    --glass-border: rgba(248, 250, 252, 0.1);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-[var(--bg-primary)] text-[var(--text-primary)] font-inter antialiased transition-colors duration-300;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-poppins;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-[var(--glass-bg)] backdrop-blur-xl border border-[var(--glass-border)] shadow-lg;
+  }
+  .text-micro {
+    @apply text-[13px] uppercase tracking-widest font-medium;
+  }
+  .bg-grid-pattern {
+    background-image: linear-gradient(to right, var(--border-color) 1px, transparent 1px),
+                      linear-gradient(to bottom, var(--border-color) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-[var(--bg-primary)];
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-teal rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-teal-dark;
 }
 
